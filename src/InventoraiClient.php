@@ -24,6 +24,7 @@ use Inventorai\SDK\Resources\Stats;
 use Inventorai\SDK\Resources\Phrases;
 use Inventorai\SDK\Resources\Modifiers;
 use Inventorai\SDK\Resources\Scheduler;
+use Inventorai\SDK\Resources\Team;
 
 class InventoraiClient
 {
@@ -200,6 +201,15 @@ class InventoraiClient
     public function scheduler(): Scheduler
     {
         return new Scheduler($this->client);
+    }
+
+    /**
+     * Access Team resource — current team info, including the team_id
+     * needed for the `private-team.{id}` socket channel.
+     */
+    public function team(): Team
+    {
+        return new Team($this->client);
     }
 
 }
