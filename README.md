@@ -131,10 +131,27 @@ $client->inspections()->initialize([
     'type' => 'move_in',
 ]);
 
-// Get with relations
+// Get with relations — one call returns the whole inspection tree.
+// You almost never need the per-resource list() methods below for *reads* —
+// pass everything you want through `include` and you'll get it inline.
 $inspection = $client->inspections()->get(456, [
-    'include' => ['areas', 'items', 'elements', 'defects']
+    'include' => [
+        // property + tenancy context
+        'property', 'property.currentTenancy.tenants', 'inspector',
+        // the area → item → element tree (photos auto-load when these are included)
+        'areas.items.elements',
+        // optional sections
+        'meterReadings', 'keysFobs',
+        'assetChecks.propertyAsset.propertyArea',
+        'complianceForms.sections.fields.responses',
+    ],
 ]);
+
+// The per-resource sections below (Inspection Areas, Items, Elements, …)
+// are for **writes**: create, update, delete, duplicate, reorder, photo upload —
+// and for mobile/offline sync where a client re-pulls one slice or pages a leaf
+// (e.g. an HMO inspection with hundreds of items). For normal reads, prefer the
+// `include` call above.
 
 // Lifecycle
 $client->inspections()->begin(456);
