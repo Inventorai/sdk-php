@@ -142,7 +142,7 @@ class DefectsTest extends TestCase
 
         $this->mockClient->shouldReceive('upload')
             ->once()
-            ->with('/inspections/42/defects/def-1/photos', $filePath, 'photo')
+            ->with('/inspections/42/defects/def-1/photos', $filePath, 'photo', null)
             ->andReturn(['data' => ['id' => 'photo-1', 'url' => 'https://example.com/defect.jpg']]);
 
         $result = $this->defects->uploadPhoto(42, 'def-1', $filePath);

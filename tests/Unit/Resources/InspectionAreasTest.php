@@ -140,7 +140,7 @@ class InspectionAreasTest extends TestCase
 
         $this->mockClient->shouldReceive('upload')
             ->once()
-            ->with('/inspections/42/areas/area-1/photos', $filePath, 'photo')
+            ->with('/inspections/42/areas/area-1/photos', $filePath, 'photo', null)
             ->andReturn(['data' => ['id' => 'photo-1', 'url' => 'https://example.com/photo.jpg']]);
 
         $result = $this->areas->uploadPhoto(42, 'area-1', $filePath);

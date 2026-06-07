@@ -45,12 +45,12 @@ $property = $client->properties()->create([
 
 ### Base URL
 
-By default, the SDK uses `https://api.inventorai.co.uk/v1`. For local development:
+By default, the SDK uses `https://api.inventorai.co.uk/v1/team` — the third-party Team API surface, authenticated with a team API token. To point at a different host (e.g. local development):
 
 ```php
 $client = new InventoraiClient(
     'your-api-token',
-    'https://api.inventorai.co.uk/v1'
+    'https://api.inventorai.test/v1/team'
 );
 ```
 
@@ -103,6 +103,34 @@ $inspection = $client->inspections()->create([
     'ai_mode_enabled' => true,
 ]);
 
+// Create with offline-built ULID + nested tree (lets a client sync a full
+// inspection structure in one call and reuse its own row IDs)
+$inspection = $client->inspections()->create([
+    'id' => '01HZW4N8R7Q5K3JX0V9PT6S2EM',
+    'property_id' => 123,
+    'type' => 'periodic',
+    'scheduled_end_at' => '2026-04-01T11:00:00Z',
+    'areas' => [[
+        'id' => '01HZW4N8R7Q5K3JX0V9PT6S2A1',
+        'name' => 'Living Room',
+        'items' => [[
+            'id' => '01HZW4N8R7Q5K3JX0V9PT6S2I1',
+            'name' => 'Sofa',
+            'elements' => [[
+                'id' => '01HZW4N8R7Q5K3JX0V9PT6S2E1',
+                'name' => 'Cushion',
+            ]],
+        ]],
+    ]],
+]);
+
+// Initialize from a property template (async server-side expansion)
+$client->inspections()->initialize([
+    'property_id' => 123,
+    'template_id' => 7,
+    'type' => 'move_in',
+]);
+
 // Get with relations
 $inspection = $client->inspections()->get(456, [
     'include' => ['areas', 'items', 'elements', 'defects']
@@ -110,6 +138,8 @@ $inspection = $client->inspections()->get(456, [
 
 // Lifecycle
 $client->inspections()->begin(456);
+$client->inspections()->takeOver(456);          // claim an inspection locked by another inspector
+$client->inspections()->takeBackToWeb(456);     // hand a mobile-takeover inspection back to the web UI
 $client->inspections()->reschedule(456, ['inspection_date' => '2026-04-15']);
 $client->inspections()->finalize(456);
 
@@ -165,12 +195,14 @@ $client->inspectionElements()->uploadPhoto($inspectionId, $elementId, '/path/to/
 $defects = $client->defects()->list($inspectionId);
 $defect = $client->defects()->create($inspectionId, [
     'defectable_type' => 'item', 'defectable_id' => $itemId,
-    'title' => 'Scratch on surface', 'severity' => 'minor'
+    'title' => 'Scratch on surface',
+    'severity' => 'minor',           // nullable — omit if uncategorised
+    'item_label' => 'Top-left drawer', // optional free-text label for the affected part
 ]);
 
 // Contextual creation
 $client->defects()->createForArea($inspectionId, $areaId, ['title' => 'Damp patch', 'severity' => 'major']);
-$client->defects()->createForItem($inspectionId, $itemId, ['title' => 'Broken handle', 'severity' => 'moderate']);
+$client->defects()->createForItem($inspectionId, $itemId, ['title' => 'Broken handle', 'severity' => 'moderate', 'item_label' => 'Right side']);
 $client->defects()->createForElement($inspectionId, $elementId, ['title' => 'Stain', 'severity' => 'cosmetic']);
 
 $client->defects()->update($inspectionId, $defectId, ['status' => 'fixed']);
@@ -250,6 +282,33 @@ $client->inspectionAi()->submitFeedback($inspectionId, ['rating' => 5, 'comment'
 ```php
 $templates = $client->propertyTemplates()->list();
 $template = $client->propertyTemplates()->get(789);
+```
+
+### Branches
+
+```php
+$branches = $client->branches()->list();
+$branch = $client->branches()->get(1);
+```
+
+### HMO (House in Multiple Occupation)
+
+```php
+$summary = $client->hmo()->summary($inspectionId);
+$tenants = $client->hmo()->tenants($inspectionId);
+
+$client->hmo()->assignTenantToArea($inspectionId, $areaId, [
+    'tenant_ids' => ['tenant-1', 'tenant-2'],
+    'is_shared' => false,
+    'room_identifier' => 'Room 1',
+]);
+
+$client->hmo()->bulkAssignTenants($inspectionId, [
+    'assignments' => [
+        ['area_id' => 'area-1', 'tenant_ids' => ['tenant-1']],
+        ['area_id' => 'area-2', 'is_shared' => true],
+    ],
+]);
 ```
 
 ### Components

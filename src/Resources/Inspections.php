@@ -39,14 +39,32 @@ class Inspections
     }
 
     /**
-     * Create a new inspection
+     * Create a new inspection.
      *
-     * @param array $data Inspection data
+     * Accepts an optional client-built ULID (`id`) for offline-first sync
+     * idempotency, plus a nested `areas[]` tree containing `items[]` and
+     * `elements[]` so the entire structure can be created in a single call.
+     *
+     * @param array $data Inspection data — common keys: property_id, type,
+     *                    scheduled_at, scheduled_end_at, id (ULID),
+     *                    areas[] => [{id?, name, items[] => [{id?, name,
+     *                    elements[] => [{id?, name}]}]}]
      * @return array
      */
     public function create(array $data): array
     {
         return $this->client->post('/inspections', $data);
+    }
+
+    /**
+     * Initialize an inspection from a property template (async expansion).
+     *
+     * @param array $data Initialization payload (property_id, template_id, type, scheduled_at, etc.)
+     * @return array
+     */
+    public function initialize(array $data): array
+    {
+        return $this->client->post('/inspections/initialize', $data);
     }
 
     /**
@@ -104,6 +122,28 @@ class Inspections
     public function reschedule(int|string $inspectionId, array $data): array
     {
         return $this->client->patch("/inspections/{$inspectionId}/reschedule", $data);
+    }
+
+    /**
+     * Take over an inspection currently locked by another inspector.
+     *
+     * @param int|string $inspectionId Inspection ID
+     * @return array
+     */
+    public function takeOver(int|string $inspectionId): array
+    {
+        return $this->client->post("/inspections/{$inspectionId}/take-over");
+    }
+
+    /**
+     * Hand the inspection back to the web UI from a mobile takeover state.
+     *
+     * @param int|string $inspectionId Inspection ID
+     * @return array
+     */
+    public function takeBackToWeb(int|string $inspectionId): array
+    {
+        return $this->client->post("/inspections/{$inspectionId}/take-back-to-web");
     }
 
     /**

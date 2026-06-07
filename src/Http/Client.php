@@ -15,7 +15,7 @@ class Client
     protected string $baseUrl;
     protected string $apiToken;
 
-    public function __construct(string $apiToken, string $baseUrl = 'https://api.inventorai.co.uk/v1')
+    public function __construct(string $apiToken, string $baseUrl = 'https://api.inventorai.co.uk/v1/team')
     {
         $this->apiToken = $apiToken;
         $this->baseUrl = rtrim($baseUrl, '/') . '/';

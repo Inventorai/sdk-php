@@ -101,13 +101,13 @@ class ClientTest extends TestCase
         ], $result);
     }
 
-    public function test_build_query_ignores_unknown_params(): void
+    public function test_build_query_passes_through_unknown_params(): void
     {
         $result = $this->client->buildQuery([
             'unknown_param' => 'value',
         ]);
 
-        $this->assertEquals([], $result);
+        $this->assertEquals(['unknown_param' => 'value'], $result);
     }
 
     public function test_build_query_handles_single_include(): void

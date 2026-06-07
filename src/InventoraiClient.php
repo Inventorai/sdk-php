@@ -3,6 +3,8 @@
 namespace Inventorai\SDK;
 
 use Inventorai\SDK\Http\Client;
+use Inventorai\SDK\Resources\Branches;
+use Inventorai\SDK\Resources\Hmo;
 use Inventorai\SDK\Resources\Properties;
 use Inventorai\SDK\Resources\Inspections;
 use Inventorai\SDK\Resources\PropertyTemplates;
@@ -27,7 +29,7 @@ class InventoraiClient
 {
     protected Client $client;
 
-    public function __construct(string $apiToken, string $baseUrl = 'https://api.inventorai.co.uk/v1')
+    public function __construct(string $apiToken, string $baseUrl = 'https://api.inventorai.co.uk/v1/team')
     {
         $this->client = new Client($apiToken, $baseUrl);
     }
@@ -54,6 +56,22 @@ class InventoraiClient
     public function propertyTemplates(): PropertyTemplates
     {
         return new PropertyTemplates($this->client);
+    }
+
+    /**
+     * Access Branches resource
+     */
+    public function branches(): Branches
+    {
+        return new Branches($this->client);
+    }
+
+    /**
+     * Access HMO (House in Multiple Occupation) resource
+     */
+    public function hmo(): Hmo
+    {
+        return new Hmo($this->client);
     }
 
     /**
@@ -184,11 +202,4 @@ class InventoraiClient
         return new Scheduler($this->client);
     }
 
-    /**
-     * Get token info (team ID, Reverb connection details)
-     */
-    public function token(): array
-    {
-        return $this->client->get('/token');
-    }
 }

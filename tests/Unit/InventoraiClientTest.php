@@ -4,6 +4,8 @@ namespace Inventorai\SDK\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Inventorai\SDK\InventoraiClient;
+use Inventorai\SDK\Resources\Branches;
+use Inventorai\SDK\Resources\Hmo;
 use Inventorai\SDK\Resources\Properties;
 use Inventorai\SDK\Resources\Inspections;
 use Inventorai\SDK\Resources\PropertyTemplates;
@@ -58,6 +60,16 @@ class InventoraiClientTest extends TestCase
     public function test_property_templates_returns_property_templates_resource(): void
     {
         $this->assertInstanceOf(PropertyTemplates::class, $this->client->propertyTemplates());
+    }
+
+    public function test_branches_returns_branches_resource(): void
+    {
+        $this->assertInstanceOf(Branches::class, $this->client->branches());
+    }
+
+    public function test_hmo_returns_hmo_resource(): void
+    {
+        $this->assertInstanceOf(Hmo::class, $this->client->hmo());
     }
 
     public function test_components_returns_components_resource(): void

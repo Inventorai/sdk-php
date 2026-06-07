@@ -41,7 +41,7 @@ class Defects
      * Create a new defect for an inspection
      *
      * @param int|string $inspectionId Inspection ID
-     * @param array $data Defect data
+     * @param array{title?: string, description?: string, severity?: ?string, item_label?: ?string, location_notes?: string, category?: string, photo_ids?: array<string>} $data Defect data
      * @return array
      */
     public function create(int|string $inspectionId, array $data): array
@@ -54,7 +54,7 @@ class Defects
      *
      * @param int|string $inspectionId Inspection ID
      * @param string $areaId Area ID
-     * @param array $data Defect data
+     * @param array{title?: string, description?: string, severity?: ?string, item_label?: ?string, location_notes?: string, category?: string, photo_ids?: array<string>} $data Defect data
      * @return array
      */
     public function createForArea(int|string $inspectionId, string $areaId, array $data): array
@@ -67,7 +67,7 @@ class Defects
      *
      * @param int|string $inspectionId Inspection ID
      * @param string $itemId Item ID
-     * @param array $data Defect data
+     * @param array{title?: string, description?: string, severity?: ?string, item_label?: ?string, location_notes?: string, category?: string, photo_ids?: array<string>} $data Defect data
      * @return array
      */
     public function createForItem(int|string $inspectionId, string $itemId, array $data): array
@@ -80,7 +80,7 @@ class Defects
      *
      * @param int|string $inspectionId Inspection ID
      * @param string $elementId Element ID
-     * @param array $data Defect data
+     * @param array{title?: string, description?: string, severity?: ?string, item_label?: ?string, location_notes?: string, category?: string, photo_ids?: array<string>} $data Defect data
      * @return array
      */
     public function createForElement(int|string $inspectionId, string $elementId, array $data): array
@@ -93,7 +93,7 @@ class Defects
      *
      * @param int|string $inspectionId Inspection ID
      * @param string $defectId Defect ID
-     * @param array $data Defect data
+     * @param array{title?: string, description?: string, severity?: ?string, item_label?: ?string, location_notes?: string, category?: string, photo_ids?: array<string>} $data Defect data
      * @return array
      */
     public function update(int|string $inspectionId, string $defectId, array $data): array
