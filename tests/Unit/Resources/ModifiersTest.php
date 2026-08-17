@@ -164,4 +164,15 @@ class ModifiersTest extends TestCase
         $result = $this->modifiers->compose($data);
         $this->assertEquals(['data' => ['composed' => 'Good, clean and tidy']], $result);
     }
+
+    public function test_sync(): void
+    {
+        $this->mockClient->shouldReceive('get')
+            ->once()
+            ->with('/modifiers/sync', [])
+            ->andReturn(['data' => []]);
+
+        $result = $this->modifiers->sync();
+        $this->assertEquals(['data' => []], $result);
+    }
 }

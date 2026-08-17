@@ -129,4 +129,15 @@ class Modifiers
     {
         return $this->client->post('/modifiers/compose', $data);
     }
+
+    /**
+     * Sync the modifier library (full snapshot for offline caches)
+     *
+     * @param array $params Optional query parameters
+     * @return array
+     */
+    public function sync(array $params = []): array
+    {
+        return $this->client->get('/modifiers/sync', $params);
+    }
 }

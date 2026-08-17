@@ -33,7 +33,7 @@ class Compliance
      */
     public function attach(int|string $inspectionId, int|string $formId): array
     {
-        return $this->client->post("/inspections/{$inspectionId}/compliance", ['form_id' => $formId]);
+        return $this->client->post("/inspections/{$inspectionId}/compliance/attach", ['form_id' => $formId]);
     }
 
     /**
@@ -45,7 +45,7 @@ class Compliance
      */
     public function attachMultiple(int|string $inspectionId, array $formIds): array
     {
-        return $this->client->post("/inspections/{$inspectionId}/compliance/batch", ['form_ids' => $formIds]);
+        return $this->client->post("/inspections/{$inspectionId}/compliance/attach-multiple", ['form_ids' => $formIds]);
     }
 
     /**
@@ -70,7 +70,7 @@ class Compliance
      */
     public function batchUpdateResponses(int|string $inspectionId, array $fields): array
     {
-        return $this->client->patch("/inspections/{$inspectionId}/compliance/fields", ['fields' => $fields]);
+        return $this->client->post("/inspections/{$inspectionId}/compliance/batch", ['fields' => $fields]);
     }
 
     /**
@@ -82,7 +82,7 @@ class Compliance
      */
     public function uploadFile(int|string $inspectionId, $file): array
     {
-        return $this->client->upload("/inspections/{$inspectionId}/compliance/files", $file, 'file');
+        return $this->client->upload("/inspections/{$inspectionId}/compliance/upload", $file, 'file');
     }
 
     /**
@@ -94,7 +94,7 @@ class Compliance
      */
     public function addSectionInstance(int|string $inspectionId, array $data): array
     {
-        return $this->client->post("/inspections/{$inspectionId}/compliance/sections", $data);
+        return $this->client->post("/inspections/{$inspectionId}/compliance/section-instance", $data);
     }
 
     /**
@@ -106,7 +106,7 @@ class Compliance
      */
     public function removeSectionInstance(int|string $inspectionId, int|string $instanceId): array
     {
-        return $this->client->delete("/inspections/{$inspectionId}/compliance/sections/{$instanceId}");
+        return $this->client->delete("/inspections/{$inspectionId}/compliance/section-instance/{$instanceId}");
     }
 
     /**
@@ -130,7 +130,7 @@ class Compliance
      */
     public function update(int|string $inspectionId, int|string $formId, array $data): array
     {
-        return $this->client->patch("/inspections/{$inspectionId}/compliance/{$formId}", $data);
+        return $this->client->patch("/inspections/{$inspectionId}/compliance-forms/{$formId}", $data);
     }
 
     /**
@@ -142,6 +142,6 @@ class Compliance
      */
     public function detach(int|string $inspectionId, int|string $formId): array
     {
-        return $this->client->delete("/inspections/{$inspectionId}/compliance/{$formId}");
+        return $this->client->delete("/inspections/{$inspectionId}/compliance-forms/{$formId}");
     }
 }

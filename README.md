@@ -159,6 +159,8 @@ $client->inspections()->takeOver(456);          // claim an inspection locked by
 $client->inspections()->takeBackToWeb(456);     // hand a mobile-takeover inspection back to the web UI
 $client->inspections()->reschedule(456, ['inspection_date' => '2026-04-15']);
 $client->inspections()->finalize(456);
+$client->inspections()->reopen(456);            // reopen a finalised inspection for edits
+$client->inspections()->delete(456);
 
 // Check existing / comparable
 $existing = $client->inspections()->checkExisting(['property_id' => 123, 'type' => 'move_in']);
@@ -378,6 +380,21 @@ $client->modifiers()->deleteCustom($modifierId);
 $client->modifiers()->disable($modifierId);
 $client->modifiers()->enable($modifierId);
 $composed = $client->modifiers()->compose(['items' => ['Brown', 'Leather', 'Sofa']]);
+$sync = $client->modifiers()->sync();           // full snapshot for offline caches
+```
+
+### Asset Checks
+
+Alarm and safety-equipment checks recorded against an inspection.
+
+```php
+$client->assetChecks()->update($inspectionId, $assetCheckId, [
+    'tested' => 'yes',           // yes | no | not_accessible
+    'test_result' => 'pass',     // pass | fail | na
+    'condition' => 'good',       // good | fair | poor | replace
+    'notes' => 'Sounded on test',
+]);
+$client->assetChecks()->uploadPhoto($inspectionId, $assetCheckId, '/path/to/photo.jpg');
 ```
 
 ### Scheduler
@@ -388,12 +405,6 @@ $client->scheduler()->weeklyAvailability($data);
 $conflicts = $client->scheduler()->checkConflicts($data);
 $hours = $client->scheduler()->officeHours();
 $duration = $client->scheduler()->estimateDuration($data);
-```
-
-### User
-
-```php
-$user = $client->user()->me();
 ```
 
 ## Query Parameters

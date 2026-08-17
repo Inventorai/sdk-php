@@ -168,4 +168,26 @@ class Inspections
     {
         return $this->client->delete("/inspections/{$inspectionId}/cover-image");
     }
+
+    /**
+     * Reopen a finalised inspection for further editing
+     *
+     * @param int|string $inspectionId Inspection ID
+     * @return array
+     */
+    public function reopen(int|string $inspectionId): array
+    {
+        return $this->client->post("/inspections/{$inspectionId}/reopen");
+    }
+
+    /**
+     * Delete an inspection
+     *
+     * @param int|string $inspectionId Inspection ID
+     * @return array
+     */
+    public function delete(int|string $inspectionId): array
+    {
+        return $this->client->delete("/inspections/{$inspectionId}");
+    }
 }

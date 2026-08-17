@@ -9,7 +9,6 @@ use Inventorai\SDK\Resources\Properties;
 use Inventorai\SDK\Resources\Inspections;
 use Inventorai\SDK\Resources\PropertyTemplates;
 use Inventorai\SDK\Resources\Components;
-use Inventorai\SDK\Resources\User;
 use Inventorai\SDK\Resources\InspectionAreas;
 use Inventorai\SDK\Resources\InspectionItems;
 use Inventorai\SDK\Resources\InspectionElements;
@@ -20,6 +19,7 @@ use Inventorai\SDK\Resources\Compliance;
 use Inventorai\SDK\Resources\ComplianceForms;
 use Inventorai\SDK\Resources\InspectionAi;
 use Inventorai\SDK\Resources\AddressLookup;
+use Inventorai\SDK\Resources\AssetChecks;
 use Inventorai\SDK\Resources\Stats;
 use Inventorai\SDK\Resources\Phrases;
 use Inventorai\SDK\Resources\Modifiers;
@@ -84,14 +84,6 @@ class InventoraiClient
     }
 
     /**
-     * Access User resource
-     */
-    public function user(): User
-    {
-        return new User($this->client);
-    }
-
-    /**
      * Access Inspection Areas resource
      */
     public function inspectionAreas(): InspectionAreas
@@ -129,6 +121,14 @@ class InventoraiClient
     public function meterReadings(): MeterReadings
     {
         return new MeterReadings($this->client);
+    }
+
+    /**
+     * Access Asset Checks resource
+     */
+    public function assetChecks(): AssetChecks
+    {
+        return new AssetChecks($this->client);
     }
 
     /**

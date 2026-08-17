@@ -223,4 +223,26 @@ class InspectionsTest extends TestCase
         $result = $this->inspections->deleteCoverImage(42);
         $this->assertEquals(['message' => 'Cover image deleted'], $result);
     }
+
+    public function test_reopen_inspection(): void
+    {
+        $this->mockClient->shouldReceive('post')
+            ->once()
+            ->with('/inspections/42/reopen')
+            ->andReturn(['data' => ['id' => 42, 'status' => 'in_progress']]);
+
+        $result = $this->inspections->reopen(42);
+        $this->assertEquals(['data' => ['id' => 42, 'status' => 'in_progress']], $result);
+    }
+
+    public function test_delete_inspection(): void
+    {
+        $this->mockClient->shouldReceive('delete')
+            ->once()
+            ->with('/inspections/42')
+            ->andReturn(['message' => 'Inspection deleted']);
+
+        $result = $this->inspections->delete(42);
+        $this->assertEquals(['message' => 'Inspection deleted'], $result);
+    }
 }

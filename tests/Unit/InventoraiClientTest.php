@@ -9,8 +9,8 @@ use Inventorai\SDK\Resources\Hmo;
 use Inventorai\SDK\Resources\Properties;
 use Inventorai\SDK\Resources\Inspections;
 use Inventorai\SDK\Resources\PropertyTemplates;
+use Inventorai\SDK\Resources\AssetChecks;
 use Inventorai\SDK\Resources\Components;
-use Inventorai\SDK\Resources\User;
 use Inventorai\SDK\Resources\InspectionAreas;
 use Inventorai\SDK\Resources\InspectionItems;
 use Inventorai\SDK\Resources\InspectionElements;
@@ -75,11 +75,6 @@ class InventoraiClientTest extends TestCase
     public function test_components_returns_components_resource(): void
     {
         $this->assertInstanceOf(Components::class, $this->client->components());
-    }
-
-    public function test_user_returns_user_resource(): void
-    {
-        $this->assertInstanceOf(User::class, $this->client->user());
     }
 
     public function test_inspection_areas_returns_inspection_areas_resource(): void
@@ -157,5 +152,10 @@ class InventoraiClientTest extends TestCase
         $properties1 = $this->client->properties();
         $properties2 = $this->client->properties();
         $this->assertNotSame($properties1, $properties2);
+    }
+
+    public function test_asset_checks_returns_asset_checks_resource(): void
+    {
+        $this->assertInstanceOf(AssetChecks::class, $this->client->assetChecks());
     }
 }

@@ -40,7 +40,7 @@ class ComplianceTest extends TestCase
     {
         $this->mockClient->shouldReceive('post')
             ->once()
-            ->with('/inspections/42/compliance', ['form_id' => 5])
+            ->with('/inspections/42/compliance/attach', ['form_id' => 5])
             ->andReturn(['data' => ['id' => 1, 'form_id' => 5]]);
 
         $result = $this->compliance->attach(42, 5);
@@ -53,7 +53,7 @@ class ComplianceTest extends TestCase
 
         $this->mockClient->shouldReceive('post')
             ->once()
-            ->with('/inspections/42/compliance/batch', ['form_ids' => $formIds])
+            ->with('/inspections/42/compliance/attach-multiple', ['form_ids' => $formIds])
             ->andReturn(['data' => ['attached' => 3]]);
 
         $result = $this->compliance->attachMultiple(42, $formIds);
@@ -80,9 +80,9 @@ class ComplianceTest extends TestCase
             ['id' => 11, 'value' => 'No'],
         ];
 
-        $this->mockClient->shouldReceive('patch')
+        $this->mockClient->shouldReceive('post')
             ->once()
-            ->with('/inspections/42/compliance/fields', ['fields' => $fields])
+            ->with('/inspections/42/compliance/batch', ['fields' => $fields])
             ->andReturn(['data' => ['updated' => 2]]);
 
         $result = $this->compliance->batchUpdateResponses(42, $fields);
@@ -95,7 +95,7 @@ class ComplianceTest extends TestCase
 
         $this->mockClient->shouldReceive('upload')
             ->once()
-            ->with('/inspections/42/compliance/files', $filePath, 'file')
+            ->with('/inspections/42/compliance/upload', $filePath, 'file')
             ->andReturn(['data' => ['id' => 'file-1', 'url' => 'https://example.com/doc.pdf']]);
 
         $result = $this->compliance->uploadFile(42, $filePath);
@@ -108,7 +108,7 @@ class ComplianceTest extends TestCase
 
         $this->mockClient->shouldReceive('post')
             ->once()
-            ->with('/inspections/42/compliance/sections', $data)
+            ->with('/inspections/42/compliance/section-instance', $data)
             ->andReturn(['data' => ['id' => 20, 'section_id' => 5]]);
 
         $result = $this->compliance->addSectionInstance(42, $data);
@@ -119,7 +119,7 @@ class ComplianceTest extends TestCase
     {
         $this->mockClient->shouldReceive('delete')
             ->once()
-            ->with('/inspections/42/compliance/sections/20')
+            ->with('/inspections/42/compliance/section-instance/20')
             ->andReturn(['message' => 'Section instance removed']);
 
         $result = $this->compliance->removeSectionInstance(42, 20);
@@ -143,7 +143,7 @@ class ComplianceTest extends TestCase
 
         $this->mockClient->shouldReceive('patch')
             ->once()
-            ->with('/inspections/42/compliance/5', $data)
+            ->with('/inspections/42/compliance-forms/5', $data)
             ->andReturn(['data' => ['id' => 5, 'status' => 'completed']]);
 
         $result = $this->compliance->update(42, 5, $data);
@@ -154,7 +154,7 @@ class ComplianceTest extends TestCase
     {
         $this->mockClient->shouldReceive('delete')
             ->once()
-            ->with('/inspections/42/compliance/5')
+            ->with('/inspections/42/compliance-forms/5')
             ->andReturn(['message' => 'Form detached']);
 
         $result = $this->compliance->detach(42, 5);
