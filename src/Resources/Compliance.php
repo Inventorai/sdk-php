@@ -53,7 +53,9 @@ class Compliance
      *
      * @param int|string $inspectionId Inspection ID
      * @param int|string $fieldId Field ID
-     * @param array $data Response data
+     * @param array{value?: mixed, notes?: ?string, section_instance?: ?int} $data Response data.
+     *   `notes` is free text (max 1000 chars). `section_instance` is the 1-based copy
+     *   number of a repeatable section (defaults to 1).
      * @return array
      */
     public function updateResponse(int|string $inspectionId, int|string $fieldId, array $data): array
@@ -107,6 +109,19 @@ class Compliance
     public function removeSectionInstance(int|string $inspectionId, int|string $instanceId): array
     {
         return $this->client->delete("/inspections/{$inspectionId}/compliance/section-instance/{$instanceId}");
+    }
+
+    /**
+     * Remove one copy of a repeatable section, addressed by any field in that section
+     *
+     * @param int|string $inspectionId Inspection ID
+     * @param int|string $fieldId Any field ID in the repeatable section
+     * @param int $instanceNumber 1-based section copy number
+     * @return array
+     */
+    public function removeSectionCopy(int|string $inspectionId, int|string $fieldId, int $instanceNumber): array
+    {
+        return $this->client->delete("/inspections/{$inspectionId}/compliance/fields/{$fieldId}/instances/{$instanceNumber}");
     }
 
     /**

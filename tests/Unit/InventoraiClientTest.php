@@ -5,6 +5,9 @@ namespace Inventorai\SDK\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Inventorai\SDK\InventoraiClient;
 use Inventorai\SDK\Resources\Branches;
+use Inventorai\SDK\Resources\Clients;
+use Inventorai\SDK\Resources\Hazards;
+use Inventorai\SDK\Resources\Vocabulary;
 use Inventorai\SDK\Resources\Hmo;
 use Inventorai\SDK\Resources\Properties;
 use Inventorai\SDK\Resources\Inspections;
@@ -157,5 +160,20 @@ class InventoraiClientTest extends TestCase
     public function test_asset_checks_returns_asset_checks_resource(): void
     {
         $this->assertInstanceOf(AssetChecks::class, $this->client->assetChecks());
+    }
+
+    public function test_clients_returns_clients_resource(): void
+    {
+        $this->assertInstanceOf(Clients::class, $this->client->clients());
+    }
+
+    public function test_hazards_returns_hazards_resource(): void
+    {
+        $this->assertInstanceOf(Hazards::class, $this->client->hazards());
+    }
+
+    public function test_vocabulary_returns_vocabulary_resource(): void
+    {
+        $this->assertInstanceOf(Vocabulary::class, $this->client->vocabulary());
     }
 }

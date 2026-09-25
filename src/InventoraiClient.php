@@ -4,6 +4,9 @@ namespace Inventorai\SDK;
 
 use Inventorai\SDK\Http\Client;
 use Inventorai\SDK\Resources\Branches;
+use Inventorai\SDK\Resources\Clients;
+use Inventorai\SDK\Resources\Hazards;
+use Inventorai\SDK\Resources\Vocabulary;
 use Inventorai\SDK\Resources\Hmo;
 use Inventorai\SDK\Resources\Properties;
 use Inventorai\SDK\Resources\Inspections;
@@ -204,7 +207,7 @@ class InventoraiClient
     }
 
     /**
-     * Access Team resource — current team info, including the team_id
+     * Access Team resource: current team info, including the team_id
      * needed for the `private-team.{id}` socket channel.
      */
     public function team(): Team
@@ -212,4 +215,27 @@ class InventoraiClient
         return new Team($this->client);
     }
 
+    /**
+     * Access Clients resource (clients and client groups)
+     */
+    public function clients(): Clients
+    {
+        return new Clients($this->client);
+    }
+
+    /**
+     * Access Hazards resource
+     */
+    public function hazards(): Hazards
+    {
+        return new Hazards($this->client);
+    }
+
+    /**
+     * Access Vocabulary resource
+     */
+    public function vocabulary(): Vocabulary
+    {
+        return new Vocabulary($this->client);
+    }
 }

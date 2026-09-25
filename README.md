@@ -61,7 +61,7 @@ $client = new InventoraiClient(
 ```php
 // List with filters
 $properties = $client->properties()->list([
-    'filter' => ['status' => 'active', 'property_type' => 'flat'],
+    'filter' => ['status' => 'occupied', 'property_type' => 'flat'],
     'include' => ['landlord', 'inspections'],
     'sort' => '-created_at',
     'per_page' => 50
@@ -100,7 +100,7 @@ $inspection = $client->inspections()->create([
     'property_id' => 123,
     'type' => 'move_in',
     'scheduled_at' => '2026-04-01',
-    'ai_mode_enabled' => true,
+    'scribe_enabled' => true,
 ]);
 
 // Create with offline-built ULID + nested tree (lets a client sync a full
@@ -273,6 +273,10 @@ $client->compliance()->uploadFile($inspectionId, '/path/to/document.pdf');
 $client->compliance()->addSectionInstance($inspectionId, ['form_id' => 1, 'section_id' => 2]);
 $client->compliance()->removeSectionInstance($inspectionId, $instanceId);
 
+// Notes and repeatable-section copies on a response
+$client->compliance()->updateResponse($inspectionId, $fieldId, ['value' => 'Yes', 'notes' => 'Checked on site', 'section_instance' => 2]);
+$client->compliance()->removeSectionCopy($inspectionId, $fieldId, 2);
+
 // Summary & update
 $summary = $client->compliance()->summary($inspectionId);
 $client->compliance()->update($inspectionId, $formId, $data);
@@ -308,6 +312,15 @@ $template = $client->propertyTemplates()->get(789);
 ```php
 $branches = $client->branches()->list();
 $branch = $client->branches()->get(1);
+```
+
+### Clients
+
+```php
+$clients = $client->clients()->list(['scope' => 'mine', 'filter' => ['kind' => 'agency']]);
+$one = $client->clients()->get($clientId, ['include' => ['group', 'branches']]);
+$groups = $client->clients()->groups(['filter' => ['type' => 'agency']]);
+$group = $client->clients()->group($groupId, ['include' => 'clients']);
 ```
 
 ### HMO (House in Multiple Occupation)
@@ -365,6 +378,13 @@ $client->phrases()->learn(['descriptions' => ['Freshly painted walls']]);
 $phraseStats = $client->phrases()->stats();
 ```
 
+### Hazards & Vocabulary (offline sync)
+
+```php
+$hazards = $client->hazards()->sync();
+$vocabulary = $client->vocabulary()->sync();
+```
+
 ### Modifiers
 
 ```php
@@ -412,7 +432,7 @@ $duration = $client->scheduler()->estimateDuration($data);
 ### Filtering
 ```php
 $properties = $client->properties()->list([
-    'filter' => ['status' => 'active', 'property_type' => 'house']
+    'filter' => ['status' => 'occupied', 'property_type' => 'house']
 ]);
 ```
 
@@ -458,7 +478,7 @@ try {
 An active [Inventorai](https://app.inventorai.co.uk) subscription is required to use the API.
 
 1. Log in to Inventorai
-2. Go to **Team Settings** > **API**
+2. Go to **Team** > **API & Webhooks** > **API Tokens**
 3. Create a new API token
 4. Store securely
 

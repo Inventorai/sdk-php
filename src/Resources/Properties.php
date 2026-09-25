@@ -17,7 +17,9 @@ class Properties
      * List all properties
      *
      * @param array $params Query parameters
-     *   - filter: array ['status' => 'active', 'property_type' => 'flat', 'search' => 'London']
+     *   - filter: array ['status' => 'occupied', 'property_type' => 'flat', 'is_hmo' => true, 'search' => 'London']
+     *     Allowed filters: status (vacant|occupied), property_type (flat|house|commercial|studio|land),
+     *     is_hmo (bool), has_inspections (bool), search, client_id, client_group_id
      *   - include: array|string ['landlord', 'inspections'] or 'landlord,inspections'
      *   - sort: string '-created_at' or 'address_line_1'
      *   - per_page: int (max 100)
@@ -47,7 +49,8 @@ class Properties
     /**
      * Create a new property
      *
-     * @param array $data Property data
+     * @param array $data Property data. `property_type` is the building only
+     *   (flat|house|commercial|studio|land); HMO status is the separate `is_hmo` boolean.
      * @return array
      */
     public function create(array $data): array

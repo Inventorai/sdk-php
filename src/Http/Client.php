@@ -15,7 +15,13 @@ class Client
     protected string $baseUrl;
     protected string $apiToken;
 
-    public function __construct(string $apiToken, string $baseUrl = 'https://api.inventorai.co.uk/v1/team')
+    /**
+     * JSON bodies get their Content-Type from Guzzle's `json` option, and
+     * multipart uploads get theirs (with boundary) from `multipart`.
+     *
+     * @param array<string, mixed> $guzzleOptions Extra Guzzle options (e.g. a custom `handler`)
+     */
+    public function __construct(string $apiToken, string $baseUrl = 'https://api.inventorai.co.uk/v1/team', array $guzzleOptions = [])
     {
         $this->apiToken = $apiToken;
         $this->baseUrl = rtrim($baseUrl, '/') . '/';
@@ -25,10 +31,9 @@ class Client
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->apiToken,
                 'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
             ],
             'timeout' => 30,
-        ]);
+        ] + $guzzleOptions);
     }
 
     /**

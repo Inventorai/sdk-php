@@ -160,4 +160,15 @@ class ComplianceTest extends TestCase
         $result = $this->compliance->detach(42, 5);
         $this->assertEquals(['message' => 'Form detached'], $result);
     }
+
+    public function test_remove_section_copy(): void
+    {
+        $this->mockClient->shouldReceive('delete')
+            ->once()
+            ->with('/inspections/42/compliance/fields/7/instances/2')
+            ->andReturn(['success' => true]);
+
+        $result = $this->compliance->removeSectionCopy(42, 7, 2);
+        $this->assertEquals(['success' => true], $result);
+    }
 }

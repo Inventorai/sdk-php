@@ -4,6 +4,10 @@ namespace Inventorai\SDK\Tests\Unit\Http;
 
 use PHPUnit\Framework\TestCase;
 use Inventorai\SDK\Http\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
 
 class ClientTest extends TestCase
 {
@@ -130,5 +134,40 @@ class ClientTest extends TestCase
         $this->assertEquals([
             'filter[search]' => 'London',
         ], $result);
+    }
+
+    /**
+     * @return array{0: Client, 1: \ArrayObject}
+     */
+    protected function clientWithHistory(): array
+    {
+        $history = new \ArrayObject();
+        $stack = HandlerStack::create(new MockHandler([new Response(200, [], '{"ok":true}')]));
+        $stack->push(Middleware::history($history));
+
+        return [new Client('test-api-token', 'https://api.example.test/v1/team', ['handler' => $stack]), $history];
+    }
+
+    public function test_upload_sends_multipart_content_type_with_boundary(): void
+    {
+        [$client, $history] = $this->clientWithHistory();
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, 'fake-image-bytes');
+        rewind($stream);
+
+        $client->upload('/inspections/1/photos', $stream, 'photo', 'photo.jpg');
+
+        $contentType = $history[0]['request']->getHeaderLine('Content-Type');
+        $this->assertMatchesRegularExpression('#^multipart/form-data; boundary=.+#', $contentType);
+        $this->assertStringNotContainsString('application/json', $contentType);
+    }
+
+    public function test_post_sends_json_content_type(): void
+    {
+        [$client, $history] = $this->clientWithHistory();
+
+        $client->post('/properties', ['address_line_1' => '1 Test Street']);
+
+        $this->assertSame('application/json', $history[0]['request']->getHeaderLine('Content-Type'));
     }
 }
