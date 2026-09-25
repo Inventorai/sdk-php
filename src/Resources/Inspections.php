@@ -45,7 +45,7 @@ class Inspections
      * idempotency, plus a nested `areas[]` tree containing `items[]` and
      * `elements[]` so the entire structure can be created in a single call.
      *
-     * @param array $data Inspection data — common keys: property_id, type,
+     * @param array $data Inspection data. Common keys: property_id, type,
      *                    scheduled_at, scheduled_end_at, id (ULID),
      *                    areas[] => [{id?, name, items[] => [{id?, name,
      *                    elements[] => [{id?, name}]}]}]

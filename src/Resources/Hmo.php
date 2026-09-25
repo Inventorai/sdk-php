@@ -14,7 +14,7 @@ class Hmo
     }
 
     /**
-     * Get HMO summary for an inspection — areas grouped by tenant + shared/unassigned.
+     * Get HMO summary for an inspection: areas grouped by tenant + shared/unassigned.
      *
      * @param int|string $inspectionId Inspection ID
      * @return array
